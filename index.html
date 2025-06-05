@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday, Kyriako! ❤️</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+</head>
+<body>
+  <div class="bubbles-container"></div>
+
+  <main class="container">
+    <!-- Animated Header -->
+    <h1 id="typed-text"></h1>
+
+    <!-- Confetti Button -->
+    <button id="confetti-btn">Click for Surprise!</button>
+
+    <!-- Side-by-side gallery and album -->
+    <div class="two-column">
+      <!-- Gallery -->
+      <div class="left-column">
+        <section class="gallery-section">
+          <h2>Our Favorite Memories 📸</h2>
+          <div class="gallery-container">
+            <div class="gallery">
+              <img src="pictures/ffavorite.jpg" alt="Favorite memory photo" class="active" />
+              <img src="pictures/kiss.jpg" alt="Kiss memory photo" />
+              <img src="pictures/loutraki.jpg" alt="Loutraki memory photo" />
+            </div>
+            <button class="gallery-btn prev-btn" aria-label="Previous image">❮</button>
+            <button class="gallery-btn next-btn" aria-label="Next image">❯</button>
+            <div class="dots-container" role="tablist"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Spotify -->
+      <div class="right-column">
+        <section class="music-gift">
+          <h3>Your Special Album 🎶</h3>
+          <div class="spotify-container">
+            <iframe
+              src="https://open.spotify.com/embed/album/5iIq470vW4rrsxq5ZRBo3Y?utm_source=generator"
+              width="100%"
+              height="352"
+              frameborder="0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+              style="border-radius:12px;">
+            </iframe>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Memory Gallery -->
+    <div class="memories">
+      <div class="memory-card" onclick="flipCard(this)" tabindex="0" role="button" aria-pressed="false">
+        <div class="front">🌟 Our First Photo</div>
+        <div class="back"><img src="pictures/first.jpg" alt="First Photo" /></div>
+      </div>
+      <div class="memory-card" onclick="flipCard(this)" tabindex="0" role="button" aria-pressed="false">
+        <div class="front">🎉 Your Favorite Photo</div>
+        <div class="back"><img src="pictures/kfavorite.jpg" alt="Favorite Photo" /></div>
+      </div>
+    </div>
+
+    <!-- Hidden Easter Egg -->
+    <button id="secret" aria-label="Easter Egg">(Psst... click me)</button>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
