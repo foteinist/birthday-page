@@ -59,6 +59,7 @@ h2, h3 {
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
   margin: 20px 0;
+  position: relative; /* Needed for ::after positioning */
 }
 
 #confetti-btn:hover,
@@ -71,6 +72,26 @@ h2, h3 {
 #confetti-btn:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 4px;
+}
+
+#confetti-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(211, 47, 47, 0.2);
+}
+
+#confetti-btn::after {
+  content: '';
+  position: absolute;
+  top: -5px; left: -5px; right: -5px; bottom: -5px;
+  border-radius: 50px;
+  pointer-events: none;
+  box-shadow: 0 0 15px var(--primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#confetti-btn:hover::after {
+  opacity: 1;
 }
 
 /* Two Column Layout */
@@ -225,7 +246,7 @@ h2, h3 {
 
 .memory-card {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 1; /* Makes the card square */
   perspective: 1000px;
   cursor: pointer;
   position: relative;
@@ -275,7 +296,7 @@ h2, h3 {
   max-height: 100%;
   width: auto;
   height: auto;
-  object-fit: contain;
+  object-fit: contain; /* Show the whole image without cropping */
   border-radius: 8px;
   pointer-events: none;
   display: block;
@@ -359,4 +380,81 @@ h2, h3 {
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
+}
+
+[data-scroll] {
+  transition: all 1s ease;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+[data-scroll="in"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reasons-widget {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  margin: 40px auto;
+  max-width: 600px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+#reason-generator {
+  background: linear-gradient(135deg, #d32f2f, #f06292);
+  border: 2px solid transparent;
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  border-radius: 35px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
+  letter-spacing: 1.2px;
+  transition: 
+    background 0.4s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease,
+    border-color 0.3s ease;
+  user-select: none;
+  display: inline-block;
+  text-align: center;
+  margin-top: 10px;
+}
+
+#reason-generator:hover,
+#reason-generator:focus {
+  background: linear-gradient(135deg, #f06292, #d32f2f);
+  box-shadow: 0 8px 20px rgba(240, 98, 146, 0.6);
+  transform: translateY(-3px) scale(1.05);
+  outline: none;
+  border-color: #ffcdd2;
+}
+
+#reason-generator:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.reason-card {
+  background: var(--accent);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: italic;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.5s ease;
+}
+
+.reason-card.show {
+  opacity: 1;
+  transform: translateY(0);
 }
