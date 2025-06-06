@@ -9,6 +9,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600&family=Dancing+Script:wght@700&display=swap');
 
+    /* Base Theme (Light) */
     :root {
       --primary: #d32f2f;
       --secondary: #282828;
@@ -21,6 +22,48 @@
       --font-heading: 'Playfair Display', serif;
       --font-body: 'Montserrat', sans-serif;
       --font-special: 'Dancing Script', cursive;
+    }
+
+    /* Dark Theme */
+    body.dark {
+      --primary: #ff6b6b;
+      --secondary: #f8f9fa;
+      --accent: #343a40;
+      --text: #f8f9fa;
+      --light-bg: #212529;
+    }
+    body.dark .glass-panel {
+      background: rgba(33, 37, 41, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    body.dark .gallery-section,
+    body.dark .reasons-widget {
+      background: #343a40;
+      color: #f8f9fa;
+    }
+    body.dark .floating-nav {
+      background: rgba(52, 58, 64, 0.9);
+    }
+    body.dark .floating-nav a {
+      color: #ff6b6b;
+    }
+
+    /* Romantic Theme */
+    body.romantic {
+      --primary: #ff758c;
+      --secondary: #ff7eb3;
+      --accent: #ffccd5;
+      --text: #5c0032;
+      --light-bg: #fff0f3;
+    }
+    body.romantic .glass-panel {
+      background: rgba(255, 240, 243, 0.9);
+    }
+    body.romantic .memory-card .front {
+      background: #ffccd5;
+    }
+    body.romantic .memory-card .back {
+      background: #ffb3c6;
     }
 
     * {
@@ -39,6 +82,7 @@
       background-size: 20px 20px;
       background-attachment: fixed;
       overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .container {
@@ -642,7 +686,7 @@
       z-index: 100;
     }
 
-    .theme-switcher button {
+   .theme-switcher button {
       background: rgba(255,255,255,0.9);
       border: none;
       width: 40px;
@@ -679,9 +723,9 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
-      .floating-nav {
-        bottom: 10px;
-        padding: 8px 15px;
+      .theme-switcher {
+        top: 10px;
+        right: 10px;
       }
       
       .floating-nav a {
@@ -697,6 +741,21 @@
       .memory-card {
         max-width: 300px;
         margin: 0 auto;
+      }
+
+      /* Add to your <style> section */
+      #secret {
+        font-family: 'Courier New', monospace;
+        background: #1a1a1a;
+        color: #00ff00;
+        border: 1px solid #3a3a3a;
+        border-radius: 0;
+        padding: 10px 15px;
+        opacity: 0.7;
+      }
+      #secret:hover {
+        opacity: 1;
+        text-shadow: 0 0 5px #00ff00;
       }
     }
   </style>
@@ -788,6 +847,39 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      // Theme Switching - Enhanced Version
+      const themeButtons = document.querySelectorAll('.theme-switcher button');
+      
+      // Apply saved theme or default to light
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.body.className = savedTheme;
+      
+      // Highlight active theme button
+      function highlightActiveTheme() {
+        themeButtons.forEach(btn => {
+          btn.style.transform = btn.dataset.theme === document.body.className ? 'scale(1.2)' : 'scale(1)';
+          btn.style.boxShadow = btn.dataset.theme === document.body.className ? '0 0 0 2px var(--primary)' : 'var(--shadow-sm)';
+        });
+      }
+      
+      // Set up theme buttons
+      themeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const theme = button.dataset.theme;
+          document.body.className = theme;
+          localStorage.setItem('theme', theme);
+          highlightActiveTheme();
+          
+          // Play a subtle sound on theme change (optional)
+          const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-jump-coin-216.mp3');
+          audio.volume = 0.3;
+          audio.play().catch(e => console.log("Audio play failed:", e));
+        });
+      });
+      
+      // Initialize button states
+      highlightActiveTheme();
+
       try {
         // Hide loader when everything is loaded
         window.addEventListener('load', () => {
@@ -874,11 +966,23 @@
           card.setAttribute('aria-pressed', String(!pressed));
         }
 
-        // Easter Egg
+        // Easter Egg - Arch Linux Edition
         const secret = document.getElementById("secret");
         if (secret) {
           secret.addEventListener("click", () => {
-            alert("You found my secret message: I love you more than code! 💻❤️");
+            const archMessages = [
+              "sudo pacman -Syu my_heart\n> Dependency found: You",
+              "error: could not lock db\n> Reason: Your smile holds the lock",
+              "Kernel panic: Heart overload\n> Suggested fix: Hold Ctrl+Alt+Kyriako",
+              "Arch Linux 100%\nYou 1000%",
+              "systemctl start happiness.service\n> Activated by: Your presence",
+              "git commit -m 'Best partner ever'\n> [main 1337f1f] Kyriako approved",
+              "ping 127.0.0.1\n> Reply from your heart: 64 bytes in 0.0001ms"
+            ];
+            const randomMsg = archMessages[Math.floor(Math.random() * archMessages.length)];
+            
+            // Format as terminal output with Arch colors
+            alert(`\x1b[1;32m$ ${randomMsg}\x1b[0m\n\n(psst... happy birthday!)`); 
           });
         }
 
