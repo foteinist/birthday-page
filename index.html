@@ -7,7 +7,7 @@
   <link rel="icon" href="favicon.png" type="image/png">
   <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600&family=Dancing+Script:wght@700&display=swap');
 
     :root {
       --primary: #d32f2f;
@@ -18,10 +18,19 @@
       --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
       --shadow-md: 0 4px 15px rgba(0,0,0,0.12);
       --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
+      --font-heading: 'Playfair Display', serif;
+      --font-body: 'Montserrat', sans-serif;
+      --font-special: 'Dancing Script', cursive;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: var(--font-body);
       background: var(--light-bg);
       color: var(--text);
       line-height: 1.6;
@@ -29,15 +38,65 @@
       background-image: radial-gradient(var(--accent) 1px, transparent 1px);
       background-size: 20px 20px;
       background-attachment: fixed;
+      overflow-x: hidden;
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
-    #typed-text {
-      font-size: clamp(2rem, 5vw, 3.5rem);
+    /* Loading Animation */
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--light-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s, visibility 0.5s;
+    }
+
+    .heart-pulse {
+      font-size: 4rem;
+      animation: pulse 1.5s infinite;
+      margin-bottom: 20px;
+    }
+
+    .progress-ring {
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring__circle {
+      stroke: var(--primary);
+      stroke-width: 4;
+      fill: transparent;
+      stroke-dasharray: 326.56;
+      stroke-dashoffset: 326.56;
+      animation: progress 2s ease-in-out forwards;
+    }
+
+    @keyframes progress {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+
+    /* Typography */
+    h1 {
+      font-family: var(--font-special);
+      font-size: clamp(2.5rem, 6vw, 4rem);
       margin: 20px 0;
       background: linear-gradient(90deg, var(--primary), #f06292);
       -webkit-background-clip: text;
@@ -45,15 +104,19 @@
       text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
       min-height: 80px;
       user-select: none;
+      letter-spacing: 1px;
+      text-align: center;
     }
 
     h2, h3 {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-heading);
       color: var(--primary);
       margin-top: 1.5rem;
       margin-bottom: 1rem;
+      text-align: center;
     }
 
+    /* Confetti Button */
     #confetti-btn {
       background: linear-gradient(135deg, var(--primary), #b71c1c);
       border: none;
@@ -65,7 +128,10 @@
       box-shadow: var(--shadow-md);
       transition: all 0.3s ease;
       letter-spacing: 0.5px;
-      margin: 20px 0;
+      margin: 20px auto;
+      display: block;
+      position: relative;
+      overflow: hidden;
     }
 
     #confetti-btn:hover,
@@ -80,6 +146,69 @@
       outline-offset: 4px;
     }
 
+    #confetti-btn:active {
+      transform: translateY(-1px);
+    }
+
+    #confetti-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255,255,255,0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+
+    #confetti-btn:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(20, 20);
+        opacity: 0;
+      }
+    }
+
+    /* Navigation */
+    .floating-nav {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 50px;
+      padding: 10px 20px;
+      box-shadow: var(--shadow-md);
+      z-index: 100;
+    }
+
+    .floating-nav a {
+      color: var(--primary);
+      text-decoration: none;
+      padding: 8px 15px;
+      margin: 0 5px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .floating-nav a:hover {
+      background: var(--accent);
+    }
+
+    /* Two Column Layout */
     .two-column {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -94,6 +223,24 @@
       }
     }
 
+    /* Glass Panel Effect */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      transition: all 0.5s ease;
+    }
+
+    .glass-panel:hover {
+      background: rgba(255, 255, 255, 0.95);
+      transform: translateY(-5px);
+    }
+
+    /* Gallery Section */
     .gallery-section {
       background: white;
       border-radius: 16px;
@@ -197,6 +344,7 @@
       background: var(--primary);
     }
 
+    /* Spotify Player */
     .music-gift {
       transition: transform 0.3s ease;
     }
@@ -213,6 +361,7 @@
       box-shadow: var(--shadow-md);
     }
 
+    /* Memory Cards */
     .memories {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -237,6 +386,32 @@
       outline: none;
     }
 
+    .memory-card::before {
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px;
+      right: -2px; bottom: -2px;
+      background: linear-gradient(45deg, 
+        #ff0000, #ff7300, #fffb00, #48ff00,
+        #00ffd5, #002bff, #7a00ff, #ff00c8);
+      background-size: 400%;
+      border-radius: 18px;
+      z-index: -1;
+      opacity: 0;
+      transition: 0.5s;
+    }
+
+    .memory-card:hover::before {
+      opacity: 1;
+      animation: gradient-border 8s linear infinite;
+    }
+
+    @keyframes gradient-border {
+      0% { background-position: 0 0; }
+      50% { background-position: 400% 0; }
+      100% { background-position: 0 0; }
+    }
+
     .memory-card div {
       width: 100%;
       height: 100%;
@@ -255,7 +430,7 @@
     .front {
       background: #f8bbd0;
       transform: rotateY(0deg);
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-heading);
       font-weight: 600;
       font-size: 1.2rem;
       color: #5d001e;
@@ -285,20 +460,131 @@
       transform: rotateY(0deg);
     }
 
+    /* Reasons Widget */
+    .reasons-widget {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin: 40px auto;
+      max-width: 600px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+
+    #reason-generator {
+      background: linear-gradient(135deg, var(--primary), #f06292);
+      border: 2px solid transparent;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      border-radius: 35px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
+      letter-spacing: 1.2px;
+      transition: 
+        background 0.4s ease,
+        box-shadow 0.3s ease,
+        transform 0.3s ease,
+        border-color 0.3s ease;
+      user-select: none;
+      display: inline-block;
+      text-align: center;
+      margin-top: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #reason-generator:hover,
+    #reason-generator:focus {
+      background: linear-gradient(135deg, #f06292, var(--primary));
+      box-shadow: 0 8px 20px rgba(240, 98, 146, 0.6);
+      transform: translateY(-3px) scale(1.05);
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    #reason-generator:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    .reason-card {
+      background: var(--accent);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-style: italic;
+      font-family: var(--font-special);
+      font-size: 1.4rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease;
+    }
+
+    .reason-card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Easter Egg */
     #secret {
-      margin-top: 50px;
+      margin: 50px auto 0;
       font-size: 0.8rem;
       color: var(--primary);
-      opacity: 0.01;
+      opacity: 0.3;
       cursor: pointer;
-      transition: opacity 0.3s ease;
+      transition: all 0.3s ease;
+      display: block;
+      text-align: center;
+      background: none;
+      border: none;
+      padding: 10px;
     }
 
     #secret:hover {
       opacity: 1;
+      transform: scale(1.1);
     }
 
-    .bubbles-container {
+    /* Animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .pulse {
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+
+    /* Particles Background */
+    .particles-container {
       position: fixed;
       top: 0;
       left: 0;
@@ -309,45 +595,154 @@
       overflow: hidden;
     }
 
-    .bubble {
+    .particle {
       position: absolute;
-      bottom: -100px;
-      background: rgba(255, 255, 255, 0.15);
       border-radius: 50%;
-      width: 15px;
-      height: 15px;
-      animation: floatBubble 20s linear infinite;
-      filter: blur(0.5px);
-      user-select: none;
+      background: hsla(0, 100%, 75%, 0.7);
+      animation: floatParticle linear infinite;
+      filter: blur(1px);
     }
 
-    @keyframes floatBubble {
-      0% { transform: translateY(0) scale(1); opacity: 0.15; }
-      50% { opacity: 0.25; }
-      100% { transform: translateY(-120vh) scale(1.5); opacity: 0; }
+    @keyframes floatParticle {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+      }
     }
 
+    /* Loading Bar */
+    .loading-bar {
+      height: 4px;
+      background: var(--primary);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      z-index: 9999;
+      transition: width 0.3s ease;
+    }
+
+    /* Theme Switcher */
+    .theme-switcher {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .theme-switcher button {
+      background: rgba(255,255,255,0.9);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .theme-switcher button:hover {
+      transform: scale(1.1);
+    }
+
+    /* Smooth scroll */
     html {
       scroll-behavior: smooth;
+    }
+
+    [data-scroll] {
+      transition: all 1s ease;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    [data-scroll="in"] {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .floating-nav {
+        bottom: 10px;
+        padding: 8px 15px;
+      }
+      
+      .floating-nav a {
+        padding: 5px 10px;
+        font-size: 0.9rem;
+      }
+      
+      .theme-switcher {
+        top: 10px;
+        right: 10px;
+      }
+      
+      .memory-card {
+        max-width: 300px;
+        margin: 0 auto;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="bubbles-container"></div>
+  <!-- Loading Animation -->
+  <div class="loader">
+    <div class="heart-pulse">💖</div>
+    <svg class="progress-ring" width="120" height="120">
+      <circle class="progress-ring__circle" stroke-width="4" fill="transparent" r="52" cx="60" cy="60"/>
+    </svg>
+  </div>
+
+  <!-- Loading Bar -->
+  <div class="loading-bar"></div>
+
+  <!-- Particles Background -->
+  <div class="particles-container"></div>
+
+  <!-- Theme Switcher -->
+  <div class="theme-switcher">
+    <button data-theme="light">☀️</button>
+    <button data-theme="dark">🌙</button>
+    <button data-theme="romantic">❤️</button>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="floating-nav">
+    <a href="#memories">Memories</a>
+    <a href="#music">Music</a>
+    <a href="#reasons">Reasons</a>
+  </nav>
 
   <main class="container">
-    <h1 id="typed-text"></h1>
-    <button id="confetti-btn">Click for Surprise!</button>
+    <h1 id="typed-text" class="fade-in"></h1>
+    <button id="confetti-btn" class="fade-in">Click for Surprise!</button>
 
     <div class="two-column">
       <div class="left-column">
-        <section class="gallery-section">
+        <section class="gallery-section glass-panel fade-in" id="memories">
           <h2>Our Favorite Memories 📸</h2>
           <div class="gallery-container">
             <div class="gallery">
-              <img src="pictures/ffavorite.JPG" alt="Favorite memory photo" class="active" />
-              <img src="pictures/kiss.JPG" alt="Kiss memory photo" />
-              <img src="pictures/loutraki.JPG" alt="Loutraki memory photo" />
+              <img src="pictures/ffavorite.JPG" alt="Favorite memory photo" class="active" data-caption="Our favorite moment together" />
+              <img src="pictures/kiss.JPG" alt="Kiss memory photo" data-caption="Our first kiss" />
+              <img src="pictures/loutraki.JPG" alt="Loutraki memory photo" data-caption="Our trip to Loutraki" />
             </div>
             <button class="gallery-btn prev-btn" aria-label="Previous image">❮</button>
             <button class="gallery-btn next-btn" aria-label="Next image">❯</button>
@@ -357,7 +752,7 @@
       </div>
 
       <div class="right-column">
-        <section class="music-gift">
+        <section class="music-gift glass-panel fade-in" id="music">
           <h3>Your Special Album 🎶</h3>
           <div class="spotify-container">
             <iframe
@@ -371,112 +766,20 @@
       </div>
     </div>
 
-    <div class="reasons-widget">
+    <div class="reasons-widget glass-panel fade-in" id="reasons">
       <h2>Why You're Amazing</h2>
-      <button id="reason-generator">Tell me more</button>
+      <button id="reason-generator">Tell Me More</button>
       <div id="reason-display" class="reason-card"></div>
     </div>
 
-<style>
-  #reason-generator {
-  background: linear-gradient(135deg, #d32f2f, #f06292);
-  border: 2px solid transparent;
-  padding: 12px 28px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: white;
-  border-radius: 35px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
-  letter-spacing: 1.2px;
-  transition: 
-    background 0.4s ease,
-    box-shadow 0.3s ease,
-    transform 0.3s ease,
-    border-color 0.3s ease;
-  user-select: none;
-  display: inline-block;
-  text-align: center;
-  margin-top: 10px;
-}
-
-#reason-generator:hover,
-#reason-generator:focus {
-  background: linear-gradient(135deg, #f06292, #d32f2f);
-  box-shadow: 0 8px 20px rgba(240, 98, 146, 0.6);
-  transform: translateY(-3px) scale(1.05);
-  outline: none;
-  border-color: #ffcdd2;
-}
-
-#reason-generator:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 4px;
-}
-
-.reason-card {
-  background: #ffcdd2;
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 20px;
-  min-height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-style: italic;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.5s ease;
-}
-.reason-card.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-</style>
-
-<script>
-const reasons = [
-  "The way your eyes light up when you're happy",
-  "How you always know how to make me smile",
-  "Your incredible kindness to everyone around you",
-  "The sound of your laugh that brightens my day",
-  "Your passion for the things you love",
-  "How you make even ordinary moments feel special",
-  "Your strength and resilience that inspires me",
-  "The way you understand me without words",
-  "Your beautiful mind and creative spirit",
-];
-
-const reasonBtn = document.getElementById("reason-generator");
-const reasonDisplay = document.getElementById("reason-display");
-
-reasonBtn.addEventListener("click", () => {
-  reasonDisplay.classList.remove("show");
-  void reasonDisplay.offsetWidth; // Trigger reflow
-  const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
-  reasonDisplay.textContent = randomReason;
-  setTimeout(() => {
-    reasonDisplay.classList.add("show");
-  }, 10);
-});
-
-// Show first reason automatically
-reasonDisplay.textContent = reasons[0];
-setTimeout(() => {
-  reasonDisplay.classList.add("show");
-}, 1000);
-</script>
-
-
-
     <div class="memories">
-      <div class="memory-card">
+      <div class="memory-card fade-in">
         <div class="front">🌟 Our First Photo</div>
-        <div class="back"><img src="pictures/first.JPG" alt="First Photo" /></div>
+        <div class="back"><img src="pictures/first.JPG" alt="First Photo" loading="lazy" /></div>
       </div>
-      <div class="memory-card">
+      <div class="memory-card fade-in">
         <div class="front">🎉 Your Favorite Photo</div>
-        <div class="back"><img src="pictures/kfavorite.JPG" alt="Favorite Photo" /></div>
+        <div class="back"><img src="pictures/kfavorite.JPG" alt="Favorite Photo" loading="lazy" /></div>
       </div>
     </div>
 
@@ -485,107 +788,305 @@ setTimeout(() => {
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const typedTextEl = document.getElementById("typed-text");
-      if (typedTextEl) {
-        const text = "Happy Birthday, Kyriako! ❤️";
-        let index = 0;
-        function typeWriter() {
-          if (index < text.length) {
-            typedTextEl.textContent += text.charAt(index++);
-            setTimeout(typeWriter, 100);
-          }
-        }
-        typeWriter();
-      }
-
-      const confettiBtn = document.getElementById("confetti-btn");
-      const jsConfetti = new JSConfetti();
-      confettiBtn?.addEventListener("click", () => {
-        jsConfetti.addConfetti({ emojis: ['🎂', '❤️', '🎉', '🥳'] });
-      });
-
-      const cards = document.querySelectorAll('.memory-card');
-      cards.forEach(card => {
-        card.setAttribute('tabindex', '0');
-        card.setAttribute('role', 'button');
-        card.setAttribute('aria-pressed', 'false');
-        card.addEventListener('click', () => toggle(card));
-        card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault(); toggle(card);
-          }
-        });
-      });
-
-      function toggle(card) {
-        card.classList.toggle("flipped");
-        const pressed = card.getAttribute('aria-pressed') === 'true';
-        card.setAttribute('aria-pressed', String(!pressed));
-      }
-
-      document.getElementById("secret")?.addEventListener("click", () => {
-        alert("You found my secret message: I love you more than code! 💻❤️");
-      });
-
-      const gallery = document.querySelector('.gallery');
-      const images = document.querySelectorAll('.gallery img');
-      const prevBtn = document.querySelector('.prev-btn');
-      const nextBtn = document.querySelector('.next-btn');
-      const dotsContainer = document.querySelector('.dots-container');
-      let currentIndex = 0;
-
-      if (images.length && dotsContainer && prevBtn && nextBtn) {
-        images.forEach((_, i) => {
-          const dot = document.createElement('div');
-          dot.classList.add('dot');
-          if (i === 0) dot.classList.add('active');
-          dot.addEventListener('click', () => updateGallery(i));
-          dotsContainer.appendChild(dot);
+      try {
+        // Hide loader when everything is loaded
+        window.addEventListener('load', () => {
+          document.querySelector('.loader').style.opacity = '0';
+          setTimeout(() => {
+            document.querySelector('.loader').style.display = 'none';
+          }, 500);
+          
+          // Simulate loading progress
+          const loadingBar = document.querySelector('.loading-bar');
+          let progress = 0;
+          const interval = setInterval(() => {
+            progress += Math.random() * 10;
+            loadingBar.style.width = `${progress}%`;
+            if (progress >= 100) clearInterval(interval);
+          }, 300);
         });
 
-        const dots = document.querySelectorAll('.dot');
+        // Typing Animation
+        const typedTextEl = document.getElementById("typed-text");
+        if (typedTextEl) {
+          const text = "Happy Birthday, Kyriako! ❤️";
+          let index = 0;
+          typedTextEl.textContent = '';
 
-        function updateGallery(index) {
-          if (index < 0 || index >= images.length) return;
-          images.forEach(img => img.classList.remove('active'));
-          dots.forEach(dot => dot.classList.remove('active'));
-          images[index].classList.add('active');
-          dots[index].classList.add('active');
-          currentIndex = index;
+          function typeWriter() {
+            if (index < text.length) {
+              typedTextEl.textContent += text.charAt(index);
+              index++;
+              setTimeout(typeWriter, 100);
+            }
+          }
+          typeWriter();
         }
 
-        prevBtn.addEventListener('click', () => updateGallery((currentIndex - 1 + images.length) % images.length));
-        nextBtn.addEventListener('click', () => updateGallery((currentIndex + 1) % images.length));
+        // Confetti Button
+        const confettiBtn = document.getElementById("confetti-btn");
+        if (confettiBtn && typeof JSConfetti !== 'undefined') {
+          const jsConfetti = new JSConfetti();
 
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'ArrowLeft') prevBtn.click();
-          if (e.key === 'ArrowRight') nextBtn.click();
+          confettiBtn.addEventListener("click", () => {
+            jsConfetti.addConfetti({
+              emojis: ['🎂', '❤️', '🎉', '🥳'],
+              confettiNumber: 150,
+              confettiRadius: 6
+            });
+          });
+        }
+
+        // Flip Memory Cards with keyboard and 3D tilt support
+        const memoryCards = document.querySelectorAll('.memory-card');
+        memoryCards.forEach(card => {
+          card.setAttribute('tabindex', '0');
+          card.setAttribute('role', 'button');
+          card.setAttribute('aria-pressed', 'false');
+
+          card.addEventListener('click', () => {
+            card.classList.toggle("flipped");
+            toggleAriaPressed(card);
+          });
+
+          card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              card.classList.toggle("flipped");
+              toggleAriaPressed(card);
+            }
+          });
+
+          // 3D Tilt Effect
+          card.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 15;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 15;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+          });
+          
+          card.addEventListener('mouseleave', () => {
+            card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+          });
         });
 
-        let touchStartX = 0;
-        let touchEndX = 0;
-        gallery.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
-        gallery.addEventListener('touchend', e => {
-          touchEndX = e.changedTouches[0].screenX;
-          if (touchEndX < touchStartX - 50) nextBtn.click();
-          if (touchEndX > touchStartX + 50) prevBtn.click();
+        function toggleAriaPressed(card) {
+          const pressed = card.getAttribute('aria-pressed') === 'true';
+          card.setAttribute('aria-pressed', String(!pressed));
+        }
+
+        // Easter Egg
+        const secret = document.getElementById("secret");
+        if (secret) {
+          secret.addEventListener("click", () => {
+            alert("You found my secret message: I love you more than code! 💻❤️");
+          });
+        }
+
+        // Gallery Functionality with Lightbox
+        const gallery = document.querySelector('.gallery');
+        const images = document.querySelectorAll('.gallery img');
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
+        const dotsContainer = document.querySelector('.dots-container');
+
+        let currentIndex = 0;
+
+        if (images.length && dotsContainer && prevBtn && nextBtn) {
+          // Create dots
+          images.forEach((_, i) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => updateGallery(i));
+            dotsContainer.appendChild(dot);
+          });
+
+          const dots = document.querySelectorAll('.dot');
+
+          function updateGallery(index) {
+            if (index < 0 || index >= images.length) return;
+            images.forEach(img => img.classList.remove('active'));
+            images[index].classList.add('active');
+            
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+            
+            currentIndex = index;
+          }
+
+          // Navigation
+          prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updateGallery(currentIndex);
+          });
+
+          nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            updateGallery(currentIndex);
+          });
+
+          // Keyboard arrows
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevBtn.click();
+            if (e.key === 'ArrowRight') nextBtn.click();
+          });
+
+          // Touch Swiping
+          let touchStartX = 0;
+          let touchEndX = 0;
+
+          if (gallery) {
+            gallery.addEventListener('touchstart', (e) => {
+              touchStartX = e.changedTouches[0].screenX;
+            });
+
+            gallery.addEventListener('touchend', (e) => {
+              touchEndX = e.changedTouches[0].screenX;
+              handleSwipe();
+            });
+          }
+
+          function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextBtn.click(); // Swipe left
+            if (touchEndX > touchStartX + 50) prevBtn.click(); // Swipe right
+          }
+
+          // Lightbox functionality
+          images.forEach(img => {
+            img.addEventListener('click', () => {
+              const lightbox = document.createElement('div');
+              lightbox.className = 'lightbox';
+              lightbox.innerHTML = `
+                <div class="lightbox-content">
+                  <span class="close">&times;</span>
+                  <img src="${img.src}" alt="${img.alt}">
+                  <p class="caption">${img.dataset.caption || ''}</p>
+                </div>
+              `;
+              document.body.appendChild(lightbox);
+              
+              lightbox.querySelector('.close').addEventListener('click', () => {
+                lightbox.remove();
+              });
+              
+              // Close when clicking outside
+              lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) {
+                  lightbox.remove();
+                }
+              });
+            });
+          });
+        }
+
+        // Reasons Widget Functionality
+        const reasons = [
+          "The way your eyes light up when you're happy",
+          "How you always know how to make me smile",
+          "Your incredible kindness to everyone around you",
+          "The sound of your laugh that brightens my day",
+          "Your passion for the things you love",
+          "How you make even ordinary moments feel special",
+          "Your strength and resilience that inspires me",
+          "The way you understand me without words",
+          "Your beautiful mind and creative spirit",
+        ];
+
+        const reasonBtn = document.getElementById("reason-generator");
+        const reasonDisplay = document.getElementById("reason-display");
+
+        if (reasonBtn && reasonDisplay) {
+          reasonBtn.addEventListener("click", () => {
+            // Reset animation
+            reasonDisplay.classList.remove("show");
+            void reasonDisplay.offsetWidth; // Trigger reflow
+            
+            // Get random reason
+            const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
+            reasonDisplay.textContent = randomReason;
+            
+            // Show with animation
+            setTimeout(() => {
+              reasonDisplay.classList.add("show");
+            }, 10);
+          });
+          
+          // Show first reason automatically
+          reasonDisplay.textContent = reasons[0];
+          setTimeout(() => {
+            reasonDisplay.classList.add("show");
+          }, 1000);
+        }
+
+        // Theme Switching
+        const themeButtons = document.querySelectorAll('.theme-switcher button');
+        themeButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            const theme = button.dataset.theme;
+            document.body.className = theme;
+            
+            // Store preference
+            localStorage.setItem('theme', theme);
+          });
         });
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.className = savedTheme;
+
+        // Initialize particles
+        function initParticles() {
+          const container = document.querySelector('.particles-container');
+          const particleCount = window.innerWidth < 768 ? 30 : 80;
+          
+          for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Random properties
+            const size = Math.random() * 15 + 5;
+            const posX = Math.random() * window.innerWidth;
+            const posY = Math.random() * window.innerHeight;
+            const delay = Math.random() * 5;
+            const duration = Math.random() * 15 + 10;
+            const color = `hsla(${Math.random() * 360}, 100%, 75%, 0.7)`;
+            
+            particle.style.cssText = `
+              width: ${size}px;
+              height: ${size}px;
+              left: ${posX}px;
+              top: ${posY}px;
+              background: ${color};
+              animation-delay: ${delay}s;
+              animation-duration: ${duration}s;
+            `;
+            
+            container.appendChild(particle);
+          }
+        }
+
+        initParticles();
+
+        // Add intersection observer for scroll animations
+        const scrollElements = document.querySelectorAll('[data-scroll]');
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.setAttribute('data-scroll', 'in');
+            }
+          });
+        }, { threshold: 0.1 });
+
+        scrollElements.forEach(el => observer.observe(el));
+
+      } catch (error) {
+        console.error("Something went wrong:", error);
+        const errorEl = document.createElement('div');
+        errorEl.className = 'error-message';
+        errorEl.textContent = "Oops! Something isn't working perfectly, but our love still is! ❤️";
+        document.body.prepend(errorEl);
       }
     });
-
-    function createBubble() {
-      const bubble = document.createElement('div');
-      bubble.classList.add('bubble');
-      const size = Math.random() * 20 + 10 + 'px';
-      bubble.style.width = size;
-      bubble.style.height = size;
-      bubble.style.left = Math.random() * 100 + 'vw';
-      bubble.style.animationDuration = (Math.random() * 10 + 10) + 's';
-      document.querySelector('.bubbles-container').appendChild(bubble);
-      setTimeout(() => bubble.remove(), 20000);
-    }
-
-    setInterval(createBubble, 300);
   </script>
 </body>
 </html>
