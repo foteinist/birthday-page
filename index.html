@@ -757,6 +757,27 @@
         opacity: 1;
         text-shadow: 0 0 5px #00ff00;
       }
+
+      input, textarea {
+        font-size: 16px; /* Prevents iOS zoom */
+      }
+
+      #confetti-btn:active, 
+      .memory-card:active {
+        transform: scale(0.98);
+      }
+
+      @media (hover: none) {
+        .gallery-btn { opacity: 1 !important; }
+      }
+
+      @media (max-width: 480px) {
+        .theme-switcher {
+          top: 5px;
+          right: 5px;
+        }
+      }
+
     }
   </style>
 </head>
@@ -982,7 +1003,7 @@
             const randomMsg = archMessages[Math.floor(Math.random() * archMessages.length)];
             
             // Format as terminal output with Arch colors
-            alert(`\x1b[1;32m$ ${randomMsg}\x1b[0m\n\n(psst... happy birthday!)`); 
+            alert(`$ ${randomMsg}\n\n(psst... happy birthday!)`); 
           });
         }
 
