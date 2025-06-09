@@ -6,6 +6,18 @@
   <title>Happy Birthday, Kyriako! ❤️</title>
   <link rel="icon" href="favicon.png" type="image/png">
   <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+
+  <!-- Preload critical images -->
+  <link rel="preload" href="pictures/ffavorite.JPG" as="image">
+  <link rel="preload" href="pictures/kiss.JPG" as="image">
+  <link rel="preload" href="pictures/loutraki.JPG" as="image">
+  <link rel="preload" href="pictures/neamakri.JPG" as="image">
+  <link rel="preload" href="pictures/first.JPG" as="image">
+  <link rel="preload" href="pictures/kfavorite.JPG" as="image">
+  
+  <!-- Preload fonts -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600&family=Dancing+Script:wght@700&display=swap" as="style">
+  
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600&family=Dancing+Script:wght@700&display=swap');
 
@@ -820,10 +832,10 @@
           <h2>Our Favorite Memories 📸</h2>
           <div class="gallery-container">
             <div class="gallery">
-              <img src="pictures/ffavorite.JPG" alt="Favorite memory photo" class="active" data-caption="Our favorite moment together" />
-              <img src="pictures/kiss.JPG" alt="Kiss memory photo" data-caption="Our first kiss" />
-              <img src="pictures/loutraki.JPG" alt="Loutraki memory photo" data-caption="Our trip to Loutraki" />
-              <img src="pictures/neamakri.JPG" alt="Nea Makri memory photo" data-caption="Our trip to Nea Makri" />
+             <img src="pictures/ffavorite.JPG" alt="Favorite memory photo" class="active" loading="eager" data-caption="Our favorite moment together" />
+              <img src="pictures/kiss.JPG" alt="Kiss memory photo" loading="lazy" data-caption="Our first kiss" />
+              <img src="pictures/loutraki.JPG" alt="Loutraki memory photo" loading="lazy" data-caption="Our trip to Loutraki" />
+              <img src="pictures/neamakri.JPG" alt="Nea Makri memory photo" loading="lazy" data-caption="Our trip to Nea Makri" />
             </div>
             <button class="gallery-btn prev-btn" aria-label="Previous image">❮</button>
             <button class="gallery-btn next-btn" aria-label="Next image">❯</button>
@@ -869,6 +881,28 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      // Preload next gallery image when current is loaded
+      function preloadNextGalleryImage() {
+        const galleryImages = document.querySelectorAll('.gallery img');
+        const currentIndex = Array.from(galleryImages).findIndex(img => img.classList.contains('active'));
+        const nextIndex = (currentIndex + 1) % galleryImages.length;
+        
+        if (!galleryImages[nextIndex].complete) {
+          const img = new Image();
+          img.src = galleryImages[nextIndex].src;
+        }
+      }
+
+      // Listen for when the active image loads
+      const activeGalleryImg = document.querySelector('.gallery img.active');
+      if (activeGalleryImg) {
+        if (activeGalleryImg.complete) {
+          preloadNextGalleryImage();
+        } else {
+          activeGalleryImg.addEventListener('load', preloadNextGalleryImage);
+        }
+      }
+
       // Theme Switching - Enhanced Version
       const themeButtons = document.querySelectorAll('.theme-switcher button');
       
@@ -1038,6 +1072,13 @@
             dots[index].classList.add('active');
             
             currentIndex = index;
+
+            // Preload next image when changing slides
+            const nextIndex = (index + 1) % images.length;
+            if (!images[nextIndex].complete) {
+              const img = new Image();
+              img.src = images[nextIndex].src;
+            }
           }
 
           // Navigation
@@ -1209,7 +1250,7 @@
         console.error("Something went wrong:", error);
         const errorEl = document.createElement('div');
         errorEl.className = 'error-message';
-        errorEl.textContent = "Oops! Something isn't working perfectly, but our love still is! ❤️";
+        errorEl.textContent = "Whoops! A small error, but your birthday sparkle shines bright ✨";
         document.body.prepend(errorEl);
       }
     });
